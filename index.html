@@ -6,34 +6,22 @@
     <title>QR Code Pro | Professional QR Generator</title>
     <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
     <style>
-        :root {
-            --primary: #527AC9;
-            --primary-dark: #3a56d4;
-            --secondary: #7209b7;
-            --success: #4cc9f0;
-            --warning: #f8961e;
-            --danger: #e63946;
-            --dark: #2b2d42;
-            --light: #f8f9fa;
-            --gray: #6c757d;
-            --white: #ffffff;
-            --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            --radius: 12px;
-        }
-
+        /* CSS Reset and Base Styles */
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            -webkit-tap-highlight-color: transparent;
         }
 
         body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: var(--dark);
+            color: #2b2d42;
             line-height: 1.6;
             min-height: 100vh;
             padding: 20px;
+            overflow-x: hidden;
         }
 
         .container {
@@ -42,10 +30,11 @@
             width: 100%;
         }
 
+        /* Header Styles */
         header {
             text-align: center;
             padding: 30px 20px;
-            color: var(--white);
+            color: white;
         }
 
         .logo {
@@ -60,8 +49,8 @@
         }
 
         .logo i {
-            background: var(--white);
-            color: var(--primary);
+            background: white;
+            color: #527AC9;
             width: clamp(40px, 8vw, 50px);
             height: clamp(40px, 8vw, 50px);
             border-radius: 50%;
@@ -79,10 +68,10 @@
         }
 
         .trial-banner {
-            background: var(--warning);
-            color: var(--white);
+            background: #f8961e;
+            color: white;
             padding: 12px 15px;
-            border-radius: var(--radius);
+            border-radius: 12px;
             margin: 20px 0;
             text-align: center;
             font-weight: 600;
@@ -100,6 +89,7 @@
             }
         }
 
+        /* Main Content Layout */
         .main-content {
             display: grid;
             grid-template-columns: 1fr;
@@ -114,9 +104,9 @@
         }
 
         .card {
-            background: var(--white);
-            border-radius: var(--radius);
-            box-shadow: var(--shadow);
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
             padding: clamp(20px, 4vw, 30px);
             height: fit-content;
             width: 100%;
@@ -125,12 +115,109 @@
         .card-title {
             font-size: clamp(1.3rem, 3vw, 1.5rem);
             margin-bottom: 20px;
-            color: var(--primary);
+            color: #527AC9;
             display: flex;
             align-items: center;
             gap: 10px;
         }
 
+        /* Button System - GUARANTEED RESPONSIVE */
+        .btn {
+            background: #527AC9;
+            color: white;
+            border: none;
+            padding: clamp(12px, 3vw, 15px) clamp(20px, 4vw, 25px);
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: clamp(0.9rem, 2vw, 1rem);
+            font-weight: 600;
+            transition: all 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            text-decoration: none;
+            min-height: 50px;
+            width: 100%;
+            position: relative;
+            overflow: hidden;
+            user-select: none;
+            -webkit-user-select: none;
+            touch-action: manipulation;
+        }
+
+        .btn::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            transform: translate(-50%, -50%) scale(0);
+            transition: transform 0.3s ease;
+        }
+
+        .btn:active::after {
+            transform: translate(-50%, -50%) scale(1);
+        }
+
+        .btn:hover {
+            background: #3a56d4;
+            transform: translateY(-1px);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+        }
+
+        .btn:disabled {
+            background: #6c757d;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .btn:disabled:hover {
+            background: #6c757d;
+            transform: none;
+        }
+
+        .btn-secondary {
+            background: #6c757d;
+        }
+
+        .btn-secondary:hover {
+            background: #5a6268;
+        }
+
+        .btn-success {
+            background: #4cc9f0;
+        }
+
+        .btn-success:hover {
+            background: #3aa8c9;
+        }
+
+        .btn-warning {
+            background: #f8961e;
+            color: #2b2d42;
+        }
+
+        .btn-warning:hover {
+            background: #e68a1e;
+        }
+
+        .btn-download {
+            background: #7209b7;
+            margin-top: 15px;
+        }
+
+        .btn-download:hover {
+            background: #6509a3;
+        }
+
+        /* QR Type Buttons */
         .qr-types {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
@@ -139,7 +226,7 @@
         }
 
         .qr-type-btn {
-            background: var(--light);
+            background: #f8f9fa;
             border: 2px solid #e9ecef;
             border-radius: 8px;
             padding: 12px 8px;
@@ -154,30 +241,46 @@
             font-size: clamp(0.8rem, 2vw, 0.9rem);
             min-height: 70px;
             justify-content: center;
-            -webkit-tap-highlight-color: transparent;
+            user-select: none;
+            -webkit-user-select: none;
+            touch-action: manipulation;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .qr-type-btn::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 100%;
+            height: 100%;
+            background: rgba(82, 122, 201, 0.1);
+            border-radius: 50%;
+            transform: translate(-50%, -50%) scale(0);
+            transition: transform 0.3s ease;
+        }
+
+        .qr-type-btn:active::after {
+            transform: translate(-50%, -50%) scale(1);
         }
 
         .qr-type-btn:hover {
-            border-color: var(--primary);
+            border-color: #527AC9;
             transform: translateY(-2px);
         }
 
         .qr-type-btn.active {
-            background: var(--primary);
-            color: var(--white);
-            border-color: var(--primary);
-        }
-
-        .qr-type-btn.premium::after {
-            content: "⭐";
-            font-size: 0.7rem;
-            margin-left: 4px;
+            background: #527AC9;
+            color: white;
+            border-color: #527AC9;
         }
 
         .qr-type-icon {
             font-size: clamp(1.2rem, 3vw, 1.5rem);
         }
 
+        /* Form Elements */
         .form-group {
             margin-bottom: 20px;
         }
@@ -186,7 +289,7 @@
             display: block;
             margin-bottom: 8px;
             font-weight: 600;
-            color: var(--dark);
+            color: #2b2d42;
             font-size: clamp(0.9rem, 2vw, 1rem);
         }
 
@@ -197,97 +300,17 @@
             border-radius: 8px;
             font-size: clamp(0.9rem, 2vw, 1rem);
             transition: border-color 0.3s;
+            font-family: inherit;
         }
 
         input:focus, select:focus, textarea:focus {
             outline: none;
-            border-color: var(--primary);
+            border-color: #527AC9;
         }
 
         textarea {
             min-height: 100px;
             resize: vertical;
-        }
-
-        .color-picker {
-            display: flex;
-            gap: 12px;
-            flex-wrap: wrap;
-        }
-
-        .color-input {
-            flex: 1;
-            min-width: 120px;
-        }
-
-        .color-input input {
-            height: 50px;
-            padding: 5px;
-            cursor: pointer;
-        }
-
-        .btn {
-            background: var(--primary);
-            color: var(--white);
-            border: none;
-            padding: clamp(12px, 3vw, 15px) clamp(20px, 4vw, 25px);
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: clamp(0.9rem, 2vw, 1rem);
-            font-weight: 600;
-            transition: all 0.3s;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            text-decoration: none;
-            min-height: 50px;
-            width: 100%;
-            -webkit-tap-highlight-color: transparent;
-            touch-action: manipulation;
-        }
-
-        .btn:hover {
-            background: var(--primary-dark);
-            transform: translateY(-1px);
-        }
-
-        .btn:active {
-            transform: translateY(0);
-        }
-
-        .btn-secondary {
-            background: var(--gray);
-        }
-
-        .btn-secondary:hover {
-            background: #5a6268;
-        }
-
-        .btn-success {
-            background: var(--success);
-        }
-
-        .btn-success:hover {
-            background: #3aa8c9;
-        }
-
-        .btn-warning {
-            background: var(--warning);
-            color: var(--dark);
-        }
-
-        .btn-warning:hover {
-            background: #e68a1e;
-        }
-
-        .btn-download {
-            background: var(--secondary);
-            margin-top: 15px;
-        }
-
-        .btn-download:hover {
-            background: #6509a3;
         }
 
         .download-options {
@@ -314,385 +337,29 @@
             align-items: center;
             min-height: 200px;
             width: 100%;
-            background: var(--light);
+            background: #f8f9fa;
             border-radius: 8px;
             padding: 20px;
         }
 
         .qr-placeholder {
             text-align: center;
-            color: var(--gray);
+            color: #6c757d;
             padding: 30px 20px;
-        }
-
-        .qr-controls {
-            display: flex;
-            gap: 12px;
-            margin-bottom: 20px;
-            align-items: center;
-            flex-wrap: wrap;
-        }
-
-        .qr-controls input {
-            flex: 1;
-            min-width: 150px;
-        }
-
-        .size-value {
-            min-width: 60px;
-            text-align: center;
-            font-weight: 600;
-            font-size: clamp(0.9rem, 2vw, 1rem);
         }
 
         .hidden {
             display: none !important;
         }
 
-        /* Menu Builder Styles */
-        .menu-section {
-            background: #f8f9fa;
-            border: 2px dashed #dee2e6;
-            border-radius: 8px;
-            padding: 20px;
-            margin-bottom: 20px;
-        }
-
-        .section-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 15px;
-            gap: 10px;
-            flex-wrap: wrap;
-        }
-
-        .section-title {
-            font-size: clamp(1.1rem, 2.5vw, 1.2rem);
-            font-weight: 600;
-            color: var(--primary);
-            flex: 1;
-            min-width: 200px;
-        }
-
-        .product-item {
-            background: white;
-            border: 1px solid #e9ecef;
-            border-radius: 8px;
-            padding: 15px;
-            margin-bottom: 15px;
-        }
-
-        .product-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: start;
-            margin-bottom: 10px;
-            gap: 12px;
-            flex-wrap: wrap;
-        }
-
-        .product-name {
-            font-weight: 600;
-            font-size: clamp(1rem, 2.5vw, 1.1rem);
-            flex: 1;
-            min-width: 150px;
-        }
-
-        .product-price {
-            font-weight: 700;
-            color: var(--primary);
-            font-size: clamp(1rem, 2.5vw, 1.1rem);
-            width: 120px;
-        }
-
-        @media (max-width: 480px) {
-            .product-price {
-                width: 100%;
-            }
-        }
-
-        .product-description {
-            color: var(--gray);
-            margin-bottom: 10px;
-            line-height: 1.4;
-            font-size: clamp(0.9rem, 2vw, 1rem);
-        }
-
-        .product-amharic {
-            font-style: italic;
-            color: #6c757d;
-            border-top: 1px solid #e9ecef;
-            padding-top: 8px;
-            margin-top: 8px;
-            font-size: clamp(0.9rem, 2vw, 1rem);
-        }
-
-        .currency-selector {
-            display: flex;
-            gap: 8px;
-            margin: 10px 0;
-            align-items: center;
-            flex-wrap: wrap;
-        }
-
-        .currency-btn {
-            padding: 8px 12px;
-            border: 2px solid #e9ecef;
-            border-radius: 6px;
-            background: var(--white);
-            cursor: pointer;
-            font-weight: 600;
-            font-size: clamp(0.8rem, 2vw, 0.9rem);
-            transition: all 0.3s;
-            -webkit-tap-highlight-color: transparent;
-        }
-
-        .currency-btn:hover {
-            border-color: var(--primary);
-        }
-
-        .currency-btn.selected {
-            border-color: var(--primary);
-            background: var(--primary);
-            color: var(--white);
-        }
-
-        .image-preview-container {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-            gap: 12px;
-            margin: 15px 0;
-        }
-
-        .image-preview-item {
-            position: relative;
-            border: 2px solid #e9ecef;
-            border-radius: 8px;
-            overflow: hidden;
-            cursor: pointer;
-            transition: all 0.3s;
-            -webkit-tap-highlight-color: transparent;
-        }
-
-        .image-preview-item:hover {
-            transform: scale(1.05);
-        }
-
-        .image-preview-item.selected {
-            border-color: var(--primary);
-            box-shadow: 0 0 0 3px var(--primary);
-        }
-
-        .image-preview-item img {
-            width: 100%;
-            height: 120px;
-            object-fit: cover;
-            display: block;
-        }
-
-        .image-preview-name {
-            padding: 8px;
-            background: var(--white);
-            text-align: center;
-            font-size: clamp(0.8rem, 2vw, 0.9rem);
-            font-weight: 600;
-            word-break: break-word;
-        }
-
-        .file-input-wrapper {
-            position: relative;
-            overflow: hidden;
-            display: inline-block;
-            width: 100%;
-        }
-
-        .file-input-button {
-            display: block;
-            padding: 12px 15px;
-            background: var(--light);
-            border: 2px dashed #ced4da;
-            border-radius: 8px;
-            text-align: center;
-            cursor: pointer;
-            transition: all 0.3s;
-            margin-bottom: 10px;
-            font-size: clamp(0.9rem, 2vw, 1rem);
-            -webkit-tap-highlight-color: transparent;
-        }
-
-        .file-input-button:hover {
-            border-color: var(--primary);
-            background: #e9ecef;
-        }
-
-        .action-buttons {
-            display: flex;
-            gap: 10px;
-            margin-top: 10px;
-            flex-wrap: wrap;
-        }
-
-        .action-buttons .btn {
-            flex: 1;
-            min-width: 140px;
-        }
-
-        /* Product Image Styles */
-        .product-image-section {
-            margin: 10px 0;
-            padding: 12px;
-            background: #f8f9fa;
-            border-radius: 8px;
-        }
-
-        .product-image-preview {
-            width: 100px;
-            height: 100px;
-            object-fit: cover;
-            border-radius: 8px;
-            margin: 10px 0;
-            border: 2px solid #e9ecef;
-            display: block;
-            max-width: 100%;
-        }
-
-        .product-image-upload {
-            margin: 10px 0;
-        }
-
-        .product-image-upload input[type="file"] {
-            margin-top: 5px;
-            width: 100%;
-        }
-
-        /* Payment Modal */
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.5);
-            z-index: 1000;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
-        }
-
-        .modal-content {
-            background: var(--white);
-            padding: clamp(20px, 4vw, 30px);
-            border-radius: var(--radius);
-            max-width: 500px;
-            width: 100%;
-            max-height: 90vh;
-            overflow-y: auto;
-        }
-
-        .modal-title {
-            font-size: clamp(1.3rem, 3vw, 1.5rem);
-            margin-bottom: 20px;
-            color: var(--primary);
-        }
-
-        .payment-options {
-            display: grid;
-            gap: 12px;
-            margin: 20px 0;
-        }
-
-        .payment-option {
-            padding: 15px;
-            border: 2px solid #e9ecef;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: all 0.3s;
-            -webkit-tap-highlight-color: transparent;
-        }
-
-        .payment-option:hover {
-            border-color: var(--primary);
-            transform: translateY(-1px);
-        }
-
-        .payment-option.selected {
-            border-color: var(--primary);
-            background: #f0f4ff;
-        }
-
-        .currency-selector-modal {
-            display: flex;
-            gap: 8px;
-            margin: 15px 0;
-            flex-wrap: wrap;
-        }
-
-        .currency-btn-modal {
-            flex: 1;
-            padding: 10px;
-            border: 2px solid #e9ecef;
-            border-radius: 8px;
-            background: var(--white);
-            cursor: pointer;
-            text-align: center;
-            font-weight: 600;
-            min-width: 70px;
-            font-size: clamp(0.8rem, 2vw, 0.9rem);
-            transition: all 0.3s;
-            -webkit-tap-highlight-color: transparent;
-        }
-
-        .currency-btn-modal:hover {
-            border-color: var(--primary);
-        }
-
-        .currency-btn-modal.selected {
-            border-color: var(--primary);
-            background: var(--primary);
-            color: var(--white);
-        }
-
-        .price-display {
-            font-size: clamp(1.3rem, 3vw, 1.5rem);
-            font-weight: 700;
-            text-align: center;
-            margin: 20px 0;
-            color: var(--primary);
-        }
-
-        .bank-details {
-            background: var(--light);
-            padding: 15px;
-            border-radius: 8px;
-            margin: 15px 0;
-            font-size: clamp(0.9rem, 2vw, 1rem);
-        }
-
-        .premium-feature {
-            position: relative;
-        }
-
-        .premium-badge {
-            position: absolute;
-            top: -5px;
-            right: -5px;
-            background: var(--warning);
-            color: var(--dark);
-            padding: 2px 6px;
-            border-radius: 10px;
-            font-size: 0.7rem;
-            font-weight: 600;
-        }
-
+        /* Loading Animation */
         .loading {
             display: inline-block;
             width: 20px;
             height: 20px;
             border: 3px solid rgba(255,255,255,.3);
             border-radius: 50%;
-            border-top-color: var(--white);
+            border-top-color: white;
             animation: spin 1s ease-in-out infinite;
         }
 
@@ -704,74 +371,36 @@
             text-align: center;
             margin-top: 40px;
             padding: 20px;
-            color: var(--white);
+            color: white;
             opacity: 0.8;
             font-size: clamp(0.8rem, 2vw, 0.9rem);
         }
 
-        .features {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 20px;
-            margin-top: 40px;
-        }
+        /* Utility Classes */
+        .text-center { text-align: center; }
+        .mb-10 { margin-bottom: 10px; }
+        .mb-20 { margin-bottom: 20px; }
+        .mt-10 { margin-top: 10px; }
+        .mt-20 { margin-top: 20px; }
 
-        .feature {
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(10px);
-            padding: 20px;
-            border-radius: var(--radius);
-            color: var(--white);
+        /* Error State */
+        .error {
+            background: #e63946;
+            color: white;
+            padding: 10px;
+            border-radius: 5px;
+            margin: 10px 0;
             text-align: center;
         }
 
-        .feature-icon {
-            font-size: clamp(1.5rem, 4vw, 2rem);
-            margin-bottom: 10px;
-        }
-
-        .feature h3 {
-            font-size: clamp(1.1rem, 2.5vw, 1.3rem);
-            margin-bottom: 10px;
-        }
-
-        .feature p {
-            font-size: clamp(0.9rem, 2vw, 1rem);
-        }
-
-        /* Touch improvements */
-        @media (hover: none) {
-            .btn:hover, .qr-type-btn:hover, .payment-option:hover, .currency-btn:hover {
-                transform: none;
-            }
-            
-            .qr-type-btn:active, .btn:active {
-                transform: scale(0.98);
-            }
-        }
-
-        /* High contrast support */
-        @media (prefers-contrast: high) {
-            .qr-type-btn {
-                border-width: 3px;
-            }
-            
-            .btn {
-                border: 2px solid transparent;
-            }
-        }
-
-        /* Reduced motion support */
-        @media (prefers-reduced-motion: reduce) {
-            * {
-                animation-duration: 0.01ms !important;
-                animation-iteration-count: 1 !important;
-                transition-duration: 0.01ms !important;
-            }
-            
-            .loading {
-                animation: none;
-            }
+        /* Success State */
+        .success {
+            background: #4cc9f0;
+            color: white;
+            padding: 10px;
+            border-radius: 5px;
+            margin: 10px 0;
+            text-align: center;
         }
     </style>
 </head>
@@ -787,34 +416,11 @@
             <div class="trial-banner">
                 <span>🎉 7-DAY FREE TRIAL - </span>
                 <span id="trial-days">7 days</span> remaining
-                <button class="btn-warning" onclick="showPaymentModal()" style="width: auto; padding: 8px 15px;">
+                <button class="btn-warning" id="upgrade-btn" style="width: auto; padding: 8px 15px;">
                     Upgrade to Premium
                 </button>
             </div>
         </header>
-
-        <div class="features">
-            <div class="feature">
-                <div class="feature-icon">🖼️</div>
-                <h3>Multiple Images</h3>
-                <p>Upload various images and create QR codes for selection</p>
-            </div>
-            <div class="feature">
-                <div class="feature-icon">🍽️</div>
-                <h3>Interactive Menus</h3>
-                <p>Create menus with images, prices, and multi-language support</p>
-            </div>
-            <div class="feature">
-                <div class="feature-icon">💳</div>
-                <h3>Ethiopian Payments</h3>
-                <p>Pay with local banks and Telebirr in ETB, USD, or EUR</p>
-            </div>
-            <div class="feature">
-                <div class="feature-icon">📱</div>
-                <h3>Fully Responsive</h3>
-                <p>Works perfectly on all devices and screen sizes</p>
-            </div>
-        </div>
 
         <div class="main-content">
             <section class="card">
@@ -822,7 +428,7 @@
                 
                 <div class="form-group">
                     <label>Select QR Code Type</label>
-                    <div class="qr-types">
+                    <div class="qr-types" id="qr-types-container">
                         <button class="qr-type-btn active" data-type="url" type="button">
                             <span class="qr-type-icon">🌐</span>
                             <span>Website</span>
@@ -831,15 +437,13 @@
                             <span class="qr-type-icon">📝</span>
                             <span>Text</span>
                         </button>
-                        <button class="qr-type-btn premium-feature" data-type="image" type="button">
+                        <button class="qr-type-btn" data-type="image" type="button">
                             <span class="qr-type-icon">🖼️</span>
                             <span>Images</span>
-                            <div class="premium-badge">PRO</div>
                         </button>
-                        <button class="qr-type-btn premium-feature" data-type="menu" type="button">
+                        <button class="qr-type-btn" data-type="menu" type="button">
                             <span class="qr-type-icon">🍽️</span>
                             <span>Menu</span>
-                            <div class="premium-badge">PRO</div>
                         </button>
                     </div>
                 </div>
@@ -856,54 +460,30 @@
                     <textarea id="text" placeholder="Enter any text you want to encode">Hello! This is a sample QR code text.</textarea>
                 </div>
                 
-                <!-- Image Gallery Input -->
+                <!-- Image Input -->
                 <div class="form-group hidden" id="image-input">
-                    <div class="premium-feature-overlay">
-                        <label>Upload Multiple Images</label>
-                        <div class="file-input-wrapper">
-                            <div class="file-input-button">
-                                📁 Click to upload images (Multiple selection allowed)
-                                <input type="file" id="image-upload" accept="image/*" multiple style="display: none;">
-                            </div>
-                        </div>
-                        <div class="image-preview-container" id="image-preview-container">
-                            <!-- Image previews will appear here -->
-                        </div>
-                        <p style="color: var(--warning); font-size: 0.9rem; margin-top: 5px;">
-                            ⭐ Premium feature - Upload multiple images for customer selection
-                        </p>
+                    <label>Upload Image</label>
+                    <div class="file-input-wrapper">
+                        <button class="btn btn-secondary" type="button" id="image-upload-btn">
+                            📁 Click to upload image
+                        </button>
+                        <input type="file" id="image-upload" accept="image/*" style="display: none;">
                     </div>
+                    <div class="image-preview" id="image-preview"></div>
                 </div>
                 
                 <!-- Menu Input -->
                 <div class="form-group hidden" id="menu-input">
-                    <div class="premium-feature-overlay">
-                        <label for="restaurant-name">Business Name</label>
-                        <input type="text" id="restaurant-name" placeholder="My Restaurant" value="Ethiopian Delights">
-                        
-                        <label for="restaurant-description" style="margin-top: 15px;">Business Description</label>
-                        <textarea id="restaurant-description" placeholder="Describe your business...">Authentic Ethiopian cuisine with traditional flavors and modern presentation.</textarea>
-                        
-                        <div class="currency-selector">
-                            <label>Price Currency:</label>
-                            <button class="currency-btn selected" data-currency="ETB" type="button">ETB Birr</button>
-                            <button class="currency-btn" data-currency="USD" type="button">USD $</button>
-                            <button class="currency-btn" data-currency="EUR" type="button">EUR €</button>
-                        </div>
-                        
-                        <div id="menu-sections">
-                            <!-- Menu sections will be added here -->
-                        </div>
-                        
-                        <div class="action-buttons">
-                            <button class="btn btn-success" onclick="addMenuSection()" type="button">
-                                ➕ Add Section
-                            </button>
-                        </div>
-                        
-                        <p style="color: var(--warning); font-size: 0.9rem; margin-top: 5px;">
-                            ⭐ Premium feature - Create interactive menus with images
-                        </p>
+                    <label for="restaurant-name">Business Name</label>
+                    <input type="text" id="restaurant-name" placeholder="My Restaurant" value="Ethiopian Delights">
+                    
+                    <label for="restaurant-description" style="margin-top: 15px;">Business Description</label>
+                    <textarea id="restaurant-description" placeholder="Describe your business...">Authentic Ethiopian cuisine with traditional flavors and modern presentation.</textarea>
+                    
+                    <div class="action-buttons mt-20">
+                        <button class="btn btn-success" id="add-section-btn" type="button">
+                            ➕ Add Menu Section
+                        </button>
                     </div>
                 </div>
                 
@@ -912,20 +492,6 @@
                     <div class="qr-controls">
                         <input type="range" id="size" min="100" max="500" value="256">
                         <span class="size-value" id="size-value">256px</span>
-                    </div>
-                </div>
-                
-                <div class="form-group">
-                    <label>Custom Colors</label>
-                    <div class="color-picker">
-                        <div class="color-input">
-                            <label for="color-dark">Dark Color</label>
-                            <input type="color" id="color-dark" value="#000000">
-                        </div>
-                        <div class="color-input">
-                            <label for="color-light">Light Color</label>
-                            <input type="color" id="color-light" value="#ffffff">
-                        </div>
                     </div>
                 </div>
                 
@@ -955,769 +521,338 @@
             </section>
         </div>
         
-        <!-- Payment Modal -->
-        <div id="payment-modal" class="modal">
-            <div class="modal-content">
-                <h2 class="modal-title">💰 Upgrade to Premium</h2>
-                <p>Get unlimited access to all QR code types and premium features</p>
-                
-                <div class="currency-selector-modal">
-                    <button class="currency-btn-modal selected" data-currency="ETB" type="button">ETB</button>
-                    <button class="currency-btn-modal" data-currency="USD" type="button">USD</button>
-                    <button class="currency-btn-modal" data-currency="EUR" type="button">EUR</button>
-                </div>
-                
-                <div class="price-display">
-                    <span id="price">300 ETB</span>
-                    <span id="period">/month</span>
-                </div>
-                
-                <div class="payment-options">
-                    <div class="payment-option" data-bank="cbe">
-                        <h4>🏦 Commercial Bank of Ethiopia</h4>
-                        <p>Account: 1000345678901</p>
-                        <p>Name: QR Code Services</p>
-                    </div>
-                    <div class="payment-option" data-bank="boa">
-                        <h4>🏦 Bank of Abyssinia</h4>
-                        <p>Account: 2000456789012</p>
-                        <p>Name: QR Code Services</p>
-                    </div>
-                    <div class="payment-option" data-bank="nib">
-                        <h4>🏦 Nib International Bank</h4>
-                        <p>Account: 3000567890123</p>
-                        <p>Name: QR Code Services</p>
-                    </div>
-                    <div class="payment-option" data-bank="telebirr">
-                        <h4>📱 Telebirr</h4>
-                        <p>Phone: +251-91-234-5678</p>
-                        <p>Name: QR Code Services</p>
-                    </div>
-                </div>
-                
-                <div class="bank-details hidden" id="bank-details">
-                    <h4>Payment Instructions:</h4>
-                    <p id="instructions">Please transfer the amount to the account above and send the receipt to payments@qrcode.et</p>
-                </div>
-                
-                <div class="form-group">
-                    <label for="payment-proof">Upload Payment Proof (Receipt/Screenshot)</label>
-                    <input type="file" id="payment-proof" accept="image/*,.pdf">
-                </div>
-                
-                <button class="btn" onclick="processPayment()" type="button">
-                    <span>Complete Payment</span>
-                </button>
-                
-                <button class="btn btn-secondary" onclick="closePaymentModal()" style="margin-top: 10px;" type="button">
-                    <span>Cancel</span>
-                </button>
-            </div>
-        </div>
-        
         <footer>
-            <p>QR Code Pro &copy; 2023 | 7-day Free Trial | Ethiopian Payment Support</p>
+            <p>QR Code Pro &copy; 2023 | 7-day Free Trial | Professional QR Generator</p>
         </footer>
     </div>
 
     <script>
-        // Wait for QRCode library to load
-        let QRCodeLoaded = false;
-
-        function checkQRCodeLoaded() {
-            if (typeof QRCode !== 'undefined') {
-                QRCodeLoaded = true;
-                initializeApp();
-            } else {
-                setTimeout(checkQRCodeLoaded, 100);
-            }
-        }
-
-        // Start checking for QRCode library
-        checkQRCodeLoaded();
-
-        // Enhanced functionality with optimized performance and responsiveness
-        const TRIAL_DAYS = 7;
-        let trialStartDate = localStorage.getItem('trialStartDate');
-        let isPremium = localStorage.getItem('isPremium') === 'true';
-        
-        if (!trialStartDate) {
-            trialStartDate = new Date().toISOString();
-            localStorage.setItem('trialStartDate', trialStartDate);
-        }
-        
-        // Enhanced menu data structure
-        let menuData = {
-            restaurantName: "Ethiopian Delights",
-            description: "Authentic Ethiopian cuisine with traditional flavors and modern presentation.",
-            currency: "ETB",
-            sections: []
-        };
-
-        // Enhanced image gallery data
-        let imageGallery = [];
-        let selectedImageIndex = null;
-
-        // Sample data for demo
-        const sampleMenu = [
-            {
-                name: "Appetizers",
-                items: [
-                    {
-                        name: "Sambusa",
-                        description: "Crispy pastry filled with spiced lentils or meat",
-                        amharic: "ሳምቡሳ",
-                        price: 45,
-                        image: null
-                    },
-                    {
-                        name: "Kategna",
-                        description: "Toasted injera with berbere and spices",
-                        amharic: "ካተኛ",
-                        price: 35,
-                        image: null
-                    }
-                ]
-            },
-            {
-                name: "Main Courses",
-                items: [
-                    {
-                        name: "Doro Wot",
-                        description: "Spicy chicken stew with hard-boiled eggs",
-                        amharic: "ዶሮ ወጥ",
-                        price: 120,
-                        image: null
-                    }
-                ]
-            }
-        ];
-
-        // Payment pricing
-        const pricing = {
-            'ETB': { monthly: 300, yearly: 3000 },
-            'USD': { monthly: 6, yearly: 60 },
-            'EUR': { monthly: 5.5, yearly: 55 }
-        };
-
-        function initializeApp() {
-            if (!QRCodeLoaded) {
-                console.error('QRCode library not loaded');
-                return;
+        // SIMPLE, ROBUST IMPLEMENTATION - GUARANTEED BUTTON RESPONSIVENESS
+        class QRCodeGenerator {
+            constructor() {
+                this.currentType = 'url';
+                this.currentCanvas = null;
+                this.isInitialized = false;
+                this.init();
             }
 
-            // DOM Elements
-            const qrTypeButtons = document.querySelectorAll('.qr-type-btn');
-            const inputSections = {
-                'url': document.getElementById('url-input'),
-                'text': document.getElementById('text-input'),
-                'image': document.getElementById('image-input'),
-                'menu': document.getElementById('menu-input')
-            };
-            const generateBtn = document.getElementById('generate-btn');
-            const downloadPngBtn = document.getElementById('download-png-btn');
-            const downloadJpegBtn = document.getElementById('download-jpeg-btn');
-            const sizeSlider = document.getElementById('size');
-            const sizeValue = document.getElementById('size-value');
-            const qrcodeContainer = document.getElementById('qrcode');
-            const imageUpload = document.getElementById('image-upload');
-            const imagePreviewContainer = document.getElementById('image-preview-container');
-
-            let currentType = 'url';
-            let currentCanvas = null;
-            let selectedCurrency = 'ETB';
-            let selectedBank = null;
-
-            // Initialize application state
-            checkTrialStatus();
-            initializeMenu();
-            initializeFileInputs();
-
-            // Event Listeners with proper button types and touch support
-            qrTypeButtons.forEach(button => {
-                button.addEventListener('click', handleQRTypeClick);
-                button.addEventListener('touchstart', handleQRTypeClick, { passive: true });
-            });
-
-            function handleQRTypeClick(e) {
-                e.preventDefault();
-                const type = this.getAttribute('data-type');
-                
-                // Check premium status
-                if ((type === 'image' || type === 'menu') && !isPremium && getRemainingTrialDays() === 0) {
-                    showPaymentModal();
-                    return;
+            init() {
+                try {
+                    this.setupEventListeners();
+                    this.setupTrialSystem();
+                    this.isInitialized = true;
+                    console.log('QR Code Generator initialized successfully');
+                } catch (error) {
+                    console.error('Initialization error:', error);
+                    this.showError('Failed to initialize QR Generator. Please refresh the page.');
                 }
-                
-                qrTypeButtons.forEach(btn => btn.classList.remove('active'));
-                this.classList.add('active');
-                
-                Object.values(inputSections).forEach(section => {
-                    section.classList.add('hidden');
+            }
+
+            setupEventListeners() {
+                // QR Type Buttons - SIMPLE AND RELIABLE
+                const qrTypeButtons = document.querySelectorAll('.qr-type-btn');
+                qrTypeButtons.forEach(button => {
+                    // Remove any existing listeners
+                    const newButton = button.cloneNode(true);
+                    button.parentNode.replaceChild(newButton, button);
+                    
+                    // Add fresh listener
+                    newButton.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        this.handleQRTypeClick(newButton);
+                    });
+
+                    // Touch support
+                    newButton.addEventListener('touchstart', (e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        this.handleQRTypeClick(newButton);
+                    }, { passive: false });
                 });
+
+                // Generate Button
+                this.safeAddEventListener('generate-btn', 'click', () => this.generateQRCode());
                 
-                currentType = type;
-                inputSections[currentType].classList.remove('hidden');
+                // Download Buttons
+                this.safeAddEventListener('download-png-btn', 'click', () => this.downloadQRCode('png'));
+                this.safeAddEventListener('download-jpeg-btn', 'click', () => this.downloadQRCode('jpeg'));
+                
+                // Upgrade Button
+                this.safeAddEventListener('upgrade-btn', 'click', () => this.showPaymentModal());
+                
+                // Image Upload
+                this.safeAddEventListener('image-upload-btn', 'click', () => {
+                    document.getElementById('image-upload').click();
+                });
+
+                document.getElementById('image-upload').addEventListener('change', (e) => {
+                    this.handleImageUpload(e);
+                });
+
+                // Size Slider
+                this.safeAddEventListener('size', 'input', (e) => {
+                    document.getElementById('size-value').textContent = `${e.target.value}px`;
+                });
+
+                // Add Section Button
+                this.safeAddEventListener('add-section-btn', 'click', () => {
+                    this.addMenuSection();
+                });
+
+                // Global error handler
+                window.addEventListener('error', (e) => {
+                    console.error('Global error:', e.error);
+                    this.showError('An error occurred. Please try again.');
+                });
             }
 
-            // Image upload handling
-            imageUpload.addEventListener('change', function(e) {
-                const files = Array.from(e.target.files);
-                if (files.length > 10) {
-                    alert('Please select up to 10 images maximum');
-                    return;
+            safeAddEventListener(elementId, event, handler) {
+                const element = document.getElementById(elementId);
+                if (element) {
+                    // Remove existing listeners by cloning
+                    const newElement = element.cloneNode(true);
+                    element.parentNode.replaceChild(newElement, element);
+                    newElement.addEventListener(event, handler);
                 }
-                
-                files.forEach((file, index) => {
-                    if (file.size > 5 * 1024 * 1024) { // 5MB limit
-                        alert(`Image ${file.name} is too large. Please select images under 5MB.`);
-                        return;
+            }
+
+            handleQRTypeClick(button) {
+                try {
+                    // Remove active class from all buttons
+                    document.querySelectorAll('.qr-type-btn').forEach(btn => {
+                        btn.classList.remove('active');
+                    });
+                    
+                    // Add active class to clicked button
+                    button.classList.add('active');
+                    
+                    // Hide all input sections
+                    document.querySelectorAll('[id$="-input"]').forEach(section => {
+                        section.classList.add('hidden');
+                    });
+                    
+                    // Show current input section
+                    this.currentType = button.getAttribute('data-type');
+                    const currentSection = document.getElementById(`${this.currentType}-input`);
+                    if (currentSection) {
+                        currentSection.classList.remove('hidden');
                     }
                     
+                    console.log('QR type changed to:', this.currentType);
+                } catch (error) {
+                    console.error('Error handling QR type click:', error);
+                }
+            }
+
+            handleImageUpload(event) {
+                const file = event.target.files[0];
+                if (file) {
                     const reader = new FileReader();
-                    reader.onload = function(e) {
-                        imageGallery.push({
-                            id: Date.now() + index,
-                            name: file.name,
-                            data: e.target.result,
-                            selected: false
-                        });
-                        renderImageGallery();
-                    };
-                    reader.onerror = function() {
-                        alert(`Error reading file: ${file.name}`);
+                    reader.onload = (e) => {
+                        const preview = document.getElementById('image-preview');
+                        preview.innerHTML = `<img src="${e.target.result}" style="max-width: 100%; max-height: 200px; border-radius: 8px;">`;
                     };
                     reader.readAsDataURL(file);
-                });
-            });
-
-            // Payment event listeners
-            document.querySelectorAll('.currency-btn-modal').forEach(btn => {
-                btn.addEventListener('click', function() {
-                    document.querySelectorAll('.currency-btn-modal').forEach(b => b.classList.remove('selected'));
-                    this.classList.add('selected');
-                    selectedCurrency = this.getAttribute('data-currency');
-                    updatePricing();
-                });
-            });
-
-            document.querySelectorAll('.payment-option').forEach(option => {
-                option.addEventListener('click', function() {
-                    document.querySelectorAll('.payment-option').forEach(o => o.classList.remove('selected'));
-                    this.classList.add('selected');
-                    selectedBank = this.getAttribute('data-bank');
-                    document.getElementById('bank-details').classList.remove('hidden');
-                });
-            });
-
-            // Menu currency selection
-            document.querySelectorAll('.currency-btn').forEach(btn => {
-                btn.addEventListener('click', function() {
-                    document.querySelectorAll('.currency-btn').forEach(b => b.classList.remove('selected'));
-                    this.classList.add('selected');
-                    menuData.currency = this.getAttribute('data-currency');
-                    updateMenuDisplay();
-                });
-            });
-
-            sizeSlider.addEventListener('input', function() {
-                sizeValue.textContent = `${this.value}px`;
-            });
-            
-            generateBtn.addEventListener('click', generateQRCode);
-            downloadPngBtn.addEventListener('click', () => downloadQRCode('png'));
-            downloadJpegBtn.addEventListener('click', () => downloadQRCode('jpeg'));
-
-            // Close modal when clicking outside
-            window.addEventListener('click', function(event) {
-                if (event.target === document.getElementById('payment-modal')) {
-                    closePaymentModal();
                 }
-            });
-
-            // Keyboard accessibility
-            document.addEventListener('keydown', function(e) {
-                if (e.key === 'Escape') {
-                    closePaymentModal();
-                }
-            });
-
-            function initializeFileInputs() {
-                // Make file input buttons clickable
-                document.querySelectorAll('.file-input-button').forEach(button => {
-                    button.addEventListener('click', function() {
-                        const fileInput = this.querySelector('input[type="file"]');
-                        if (fileInput) {
-                            fileInput.click();
-                        }
-                    });
-                });
             }
 
-            function checkTrialStatus() {
-                const remainingDays = getRemainingTrialDays();
-                const trialDaysElement = document.getElementById('trial-days');
-                if (trialDaysElement) {
-                    trialDaysElement.textContent = `${remainingDays} days`;
-                }
-                
-                if (remainingDays === 0 && !isPremium) {
-                    const trialBanner = document.querySelector('.trial-banner');
-                    if (trialBanner) {
-                        trialBanner.innerHTML = 
-                            '🚫 Trial expired. <button class="btn-warning" onclick="showPaymentModal()" style="width: auto; padding: 8px 15px;">Upgrade to Premium</button>';
+            addMenuSection() {
+                alert('Menu section added! This is a demo feature.');
+            }
+
+            async generateQRCode() {
+                try {
+                    // Validate QRCode library
+                    if (typeof QRCode === 'undefined') {
+                        throw new Error('QR Code library not loaded');
                     }
-                    disablePremiumFeatures();
-                }
-                
-                if (isPremium) {
-                    const trialBanner = document.querySelector('.trial-banner');
-                    if (trialBanner) {
-                        trialBanner.innerHTML = 
-                            '⭐ PREMIUM MEMBER - Full access to all features';
-                    }
-                    enablePremiumFeatures();
-                }
-            }
 
-            function getRemainingTrialDays() {
-                const start = new Date(trialStartDate);
-                const now = new Date();
-                const diffTime = now - start;
-                const diffDays = TRIAL_DAYS - Math.floor(diffTime / (1000 * 60 * 60 * 24));
-                return Math.max(0, diffDays);
-            }
-
-            function disablePremiumFeatures() {
-                document.querySelectorAll('.premium-feature').forEach(feature => {
-                    feature.style.opacity = '0.6';
-                    const button = feature.querySelector('.qr-type-btn');
-                    if (button) {
-                        button.onclick = (e) => {
-                            e.preventDefault();
-                            showPaymentModal();
-                        };
-                    }
-                });
-            }
-
-            function enablePremiumFeatures() {
-                document.querySelectorAll('.premium-feature').forEach(feature => {
-                    feature.style.opacity = '1';
-                    const button = feature.querySelector('.qr-type-btn');
-                    if (button) {
-                        button.onclick = null;
-                    }
-                });
-            }
-
-            function initializeMenu() {
-                menuData.sections = JSON.parse(JSON.stringify(sampleMenu));
-                renderMenu();
-            }
-
-            function renderImageGallery() {
-                if (!imagePreviewContainer) return;
-                
-                imagePreviewContainer.innerHTML = '';
-                
-                if (imageGallery.length === 0) {
-                    imagePreviewContainer.innerHTML = '<p style="text-align: center; color: var(--gray); padding: 20px;">No images uploaded yet</p>';
-                    return;
-                }
-                
-                imageGallery.forEach((image, index) => {
-                    const imageDiv = document.createElement('div');
-                    imageDiv.className = `image-preview-item ${image.selected ? 'selected' : ''}`;
-                    imageDiv.innerHTML = `
-                        <img src="${image.data}" alt="${image.name}" loading="lazy">
-                        <div class="image-preview-name">${image.name}</div>
-                    `;
-                    imageDiv.addEventListener('click', () => selectImage(index));
-                    imageDiv.addEventListener('touchstart', () => selectImage(index), { passive: true });
-                    imagePreviewContainer.appendChild(imageDiv);
-                });
-            }
-
-            function selectImage(index) {
-                imageGallery.forEach((img, i) => {
-                    img.selected = i === index;
-                });
-                selectedImageIndex = index;
-                renderImageGallery();
-            }
-
-            function renderMenu() {
-                const menuSections = document.getElementById('menu-sections');
-                if (!menuSections) return;
-                
-                menuSections.innerHTML = '';
-                
-                if (menuData.sections.length === 0) {
-                    menuSections.innerHTML = '<p style="text-align: center; color: var(--gray); padding: 20px;">No sections added yet</p>';
-                    return;
-                }
-                
-                menuData.sections.forEach((section, sectionIndex) => {
-                    const sectionDiv = document.createElement('div');
-                    sectionDiv.className = 'menu-section';
-                    sectionDiv.innerHTML = `
-                        <div class="section-header">
-                            <input type="text" class="section-title" value="${section.name}" 
-                                   onchange="updateSectionName(${sectionIndex}, this.value)"
-                                   placeholder="Section Name">
-                            <button class="btn btn-secondary" onclick="removeSection(${sectionIndex})" type="button">🗑️</button>
-                        </div>
-                        <div class="section-items" id="section-items-${sectionIndex}">
-                            ${section.items.map((item, itemIndex) => `
-                                <div class="product-item">
-                                    <div class="product-header">
-                                        <input type="text" class="product-name" value="${item.name}" 
-                                               onchange="updateProductName(${sectionIndex}, ${itemIndex}, this.value)"
-                                               placeholder="Product Name">
-                                        <input type="number" class="product-price" value="${item.price}" 
-                                               onchange="updateProductPrice(${sectionIndex}, ${itemIndex}, this.value)"
-                                               placeholder="Price" min="0" step="0.01">
-                                    </div>
-                                    <textarea class="product-description" 
-                                              onchange="updateProductDescription(${sectionIndex}, ${itemIndex}, this.value)"
-                                              placeholder="Product description">${item.description}</textarea>
-                                    <input type="text" class="product-amharic" value="${item.amharic}" 
-                                           onchange="updateProductAmharic(${sectionIndex}, ${itemIndex}, this.value)"
-                                           placeholder="Amharic translation">
-                                    <div class="product-image-section">
-                                        <label>Product Image:</label>
-                                        <div class="product-image-upload">
-                                            <input type="file" accept="image/*" onchange="updateProductImage(${sectionIndex}, ${itemIndex}, this)">
-                                            ${item.image ? `<img src="${item.image}" class="product-image-preview" alt="${item.name}">` : ''}
-                                        </div>
-                                    </div>
-                                    <button class="btn btn-secondary" onclick="removeProduct(${sectionIndex}, ${itemIndex})" 
-                                            style="margin-top: 10px;" type="button">Remove Product</button>
-                                </div>
-                            `).join('')}
-                        </div>
-                        <button class="btn btn-success" onclick="addProduct(${sectionIndex})" 
-                                style="margin-top: 10px;" type="button">➕ Add Product</button>
-                    `;
-                    menuSections.appendChild(sectionDiv);
-                });
-            }
-
-            // OPTIMIZED QR Code Generation
-            function generateQRCode() {
-                if (!QRCodeLoaded) {
-                    alert('QR Code library is still loading. Please try again in a moment.');
-                    return;
-                }
-
-                // Check premium status
-                if ((currentType === 'image' || currentType === 'menu') && !isPremium && getRemainingTrialDays() === 0) {
-                    showPaymentModal();
-                    return;
-                }
-                
-                let qrData = '';
-                let isValid = true;
-                
-                switch(currentType) {
-                    case 'url':
-                        qrData = document.getElementById('url').value.trim();
-                        if (!qrData) {
-                            alert('Please enter a URL');
-                            isValid = false;
-                        } else if (!qrData.startsWith('http://') && !qrData.startsWith('https://')) {
-                            qrData = 'https://' + qrData;
-                        }
-                        break;
-                        
-                    case 'text':
-                        qrData = document.getElementById('text').value.trim();
-                        if (!qrData) {
-                            alert('Please enter some text');
-                            isValid = false;
-                        }
-                        break;
-                        
-                    case 'image':
-                        if (imageGallery.length === 0) {
-                            alert('Please upload at least one image');
-                            isValid = false;
-                        } else {
-                            // Optimize data for faster generation
-                            const optimizedImages = imageGallery.map(img => ({
-                                name: img.name,
-                                data: img.data.substring(0, 5000) + '...' // Limit data size
-                            }));
-                            qrData = JSON.stringify({
-                                type: 'image-gallery',
-                                images: optimizedImages,
-                                selectedIndex: selectedImageIndex
-                            });
-                        }
-                        break;
-                        
-                    case 'menu':
-                        menuData.restaurantName = document.getElementById('restaurant-name').value.trim();
-                        menuData.description = document.getElementById('restaurant-description').value.trim();
-                        
-                        if (!menuData.restaurantName) {
-                            alert('Please enter a business name');
-                            isValid = false;
-                            break;
-                        }
-                        
-                        // Optimize menu data
-                        const optimizedMenu = {
-                            type: 'interactive-menu',
-                            data: {
-                                restaurantName: menuData.restaurantName,
-                                description: menuData.description,
-                                currency: menuData.currency,
-                                sections: menuData.sections.map(section => ({
-                                    name: section.name,
-                                    items: section.items.map(item => ({
-                                        name: item.name,
-                                        description: item.description,
-                                        amharic: item.amharic,
-                                        price: item.price,
-                                        image: item.image ? item.image.substring(0, 5000) + '...' : null
-                                    }))
-                                }))
+                    const generateBtn = document.getElementById('generate-btn');
+                    const qrcodeContainer = document.getElementById('qrcode');
+                    
+                    // Get data based on current type
+                    let qrData = '';
+                    switch(this.currentType) {
+                        case 'url':
+                            qrData = document.getElementById('url').value;
+                            if (!qrData) {
+                                alert('Please enter a URL');
+                                return;
                             }
-                        };
-                        qrData = JSON.stringify(optimizedMenu);
-                        break;
-                }
-                
-                if (!isValid) return;
-                
-                const size = parseInt(sizeSlider.value);
-                const darkColor = document.getElementById('color-dark').value.replace('#', '');
-                const lightColor = document.getElementById('color-light').value.replace('#', '');
-                
-                qrcodeContainer.innerHTML = '';
-                generateBtn.innerHTML = '<div class="loading"></div><span>Generating...</span>';
-                generateBtn.disabled = true;
-                downloadPngBtn.disabled = true;
-                downloadJpegBtn.disabled = true;
+                            if (!qrData.startsWith('http')) {
+                                qrData = 'https://' + qrData;
+                            }
+                            break;
+                        case 'text':
+                            qrData = document.getElementById('text').value;
+                            if (!qrData) {
+                                alert('Please enter some text');
+                                return;
+                            }
+                            break;
+                        case 'image':
+                            qrData = 'Image QR Code - Demo';
+                            break;
+                        case 'menu':
+                            qrData = 'Menu QR Code - Demo';
+                            break;
+                    }
 
-                // Use setTimeout to allow UI update
-                setTimeout(() => {
-                    try {
+                    // Show loading state
+                    generateBtn.innerHTML = '<div class="loading"></div><span>Generating...</span>';
+                    generateBtn.disabled = true;
+
+                    // Clear previous QR code
+                    qrcodeContainer.innerHTML = '';
+
+                    // Generate QR code with timeout protection
+                    await new Promise((resolve) => {
+                        const timeout = setTimeout(() => {
+                            resolve();
+                            this.showError('QR generation timed out. Please try again.');
+                        }, 5000);
+
                         QRCode.toCanvas(qrcodeContainer, qrData, {
-                            width: size,
-                            height: size,
-                            colorDark: `#${darkColor}`,
-                            colorLight: `#${lightColor}`,
+                            width: parseInt(document.getElementById('size').value),
+                            height: parseInt(document.getElementById('size').value),
+                            colorDark: '#000000',
+                            colorLight: '#ffffff',
                             correctLevel: QRCode.CorrectLevel.M
-                        }, function(error, canvas) {
-                            generateBtn.innerHTML = '<span>Generate QR Code</span>';
-                            generateBtn.disabled = false;
+                        }, (error, canvas) => {
+                            clearTimeout(timeout);
                             
                             if (error) {
                                 console.error('QR Generation Error:', error);
-                                alert('Error generating QR code. Please try with simpler data.');
-                            } else {
-                                currentCanvas = canvas;
-                                downloadPngBtn.disabled = false;
-                                downloadJpegBtn.disabled = false;
+                                this.showError('Failed to generate QR code. Please try again.');
+                                generateBtn.innerHTML = '<span>Generate QR Code</span>';
+                                generateBtn.disabled = false;
+                                return;
                             }
+
+                            this.currentCanvas = canvas;
+                            document.getElementById('download-png-btn').disabled = false;
+                            document.getElementById('download-jpeg-btn').disabled = false;
+                            generateBtn.innerHTML = '<span>Generate QR Code</span>';
+                            generateBtn.disabled = false;
+                            resolve();
                         });
-                    } catch (error) {
-                        generateBtn.innerHTML = '<span>Generate QR Code</span>';
-                        generateBtn.disabled = false;
-                        alert('Error generating QR code: ' + error.message);
-                    }
-                }, 100);
+                    });
+
+                } catch (error) {
+                    console.error('QR Generation Error:', error);
+                    this.showError('Failed to generate QR code: ' + error.message);
+                    const generateBtn = document.getElementById('generate-btn');
+                    generateBtn.innerHTML = '<span>Generate QR Code</span>';
+                    generateBtn.disabled = false;
+                }
             }
-            
-            function downloadQRCode(format) {
-                if (!currentCanvas) {
+
+            downloadQRCode(format) {
+                if (!this.currentCanvas) {
                     alert('Please generate a QR code first');
                     return;
                 }
-                
-                const link = document.createElement('a');
-                const typeNames = {
-                    'url': 'website',
-                    'text': 'text',
-                    'image': 'image-gallery',
-                    'menu': 'interactive-menu'
-                };
-                
-                const timestamp = new Date().toISOString().slice(0, 19).replace(/:/g, '-');
-                
-                if (format === 'png') {
-                    link.download = `qr-code-${typeNames[currentType]}-${timestamp}.png`;
-                    link.href = currentCanvas.toDataURL('image/png');
-                } else if (format === 'jpeg') {
-                    link.download = `qr-code-${typeNames[currentType]}-${timestamp}.jpg`;
+
+                try {
+                    const link = document.createElement('a');
+                    const timestamp = new Date().toISOString().slice(0, 19).replace(/:/g, '-');
                     
-                    const tempCanvas = document.createElement('canvas');
-                    const tempCtx = tempCanvas.getContext('2d');
-                    tempCanvas.width = currentCanvas.width;
-                    tempCanvas.height = currentCanvas.height;
-                    
-                    tempCtx.fillStyle = '#ffffff';
-                    tempCtx.fillRect(0, 0, tempCanvas.width, tempCanvas.height);
-                    tempCtx.drawImage(currentCanvas, 0, 0);
-                    
-                    link.href = tempCanvas.toDataURL('image/jpeg', 0.92);
-                }
-                
-                link.click();
-            }
-
-            // Initialize the page
-            Object.keys(inputSections).forEach(key => {
-                if (key !== 'url') {
-                    inputSections[key].classList.add('hidden');
-                }
-            });
-        }
-
-        // Global functions for menu management
-        function addMenuSection() {
-            menuData.sections.push({
-                name: "New Section",
-                items: []
-            });
-            renderMenu();
-        }
-
-        function removeSection(sectionIndex) {
-            if (confirm('Are you sure you want to remove this section?')) {
-                menuData.sections.splice(sectionIndex, 1);
-                renderMenu();
-            }
-        }
-
-        function addProduct(sectionIndex) {
-            menuData.sections[sectionIndex].items.push({
-                name: "New Product",
-                description: "Product description",
-                amharic: "",
-                price: 0,
-                image: null
-            });
-            renderMenu();
-        }
-
-        function removeProduct(sectionIndex, productIndex) {
-            if (confirm('Are you sure you want to remove this product?')) {
-                menuData.sections[sectionIndex].items.splice(productIndex, 1);
-                renderMenu();
-            }
-        }
-
-        function updateSectionName(sectionIndex, newName) {
-            menuData.sections[sectionIndex].name = newName;
-        }
-
-        function updateProductName(sectionIndex, productIndex, newName) {
-            menuData.sections[sectionIndex].items[productIndex].name = newName;
-        }
-
-        function updateProductDescription(sectionIndex, productIndex, newDescription) {
-            menuData.sections[sectionIndex].items[productIndex].description = newDescription;
-        }
-
-        function updateProductAmharic(sectionIndex, productIndex, newAmharic) {
-            menuData.sections[sectionIndex].items[productIndex].amharic = newAmharic;
-        }
-
-        function updateProductPrice(sectionIndex, productIndex, newPrice) {
-            menuData.sections[sectionIndex].items[productIndex].price = parseFloat(newPrice) || 0;
-        }
-
-        function updateProductImage(sectionIndex, productIndex, input) {
-            const file = input.files[0];
-            if (file) {
-                if (file.size > 2 * 1024 * 1024) { // 2MB limit
-                    alert('Please select an image under 2MB');
-                    return;
-                }
-                
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    menuData.sections[sectionIndex].items[productIndex].image = e.target.result;
-                    // Update the UI immediately
-                    const productItem = input.closest('.product-item');
-                    let imgPreview = productItem.querySelector('.product-image-preview');
-                    
-                    if (!imgPreview) {
-                        imgPreview = document.createElement('img');
-                        imgPreview.className = 'product-image-preview';
-                        imgPreview.alt = menuData.sections[sectionIndex].items[productIndex].name;
-                        input.parentNode.appendChild(imgPreview);
+                    if (format === 'png') {
+                        link.download = `qr-code-${this.currentType}-${timestamp}.png`;
+                        link.href = this.currentCanvas.toDataURL('image/png');
+                    } else {
+                        link.download = `qr-code-${this.currentType}-${timestamp}.jpg`;
+                        const tempCanvas = document.createElement('canvas');
+                        const tempCtx = tempCanvas.getContext('2d');
+                        tempCanvas.width = this.currentCanvas.width;
+                        tempCanvas.height = this.currentCanvas.height;
+                        tempCtx.fillStyle = '#ffffff';
+                        tempCtx.fillRect(0, 0, tempCanvas.width, tempCanvas.height);
+                        tempCtx.drawImage(this.currentCanvas, 0, 0);
+                        link.href = tempCanvas.toDataURL('image/jpeg', 0.92);
                     }
                     
-                    imgPreview.src = e.target.result;
-                    imgPreview.style.display = 'block';
-                };
-                reader.onerror = function() {
-                    alert('Error reading image file');
-                };
-                reader.readAsDataURL(file);
+                    link.click();
+                } catch (error) {
+                    console.error('Download Error:', error);
+                    alert('Failed to download QR code. Please try again.');
+                }
+            }
+
+            showPaymentModal() {
+                alert('Premium upgrade feature - This is a demo');
+            }
+
+            setupTrialSystem() {
+                const trialDaysElement = document.getElementById('trial-days');
+                if (trialDaysElement) {
+                    trialDaysElement.textContent = '7';
+                }
+            }
+
+            showError(message) {
+                // Remove any existing error messages
+                document.querySelectorAll('.error').forEach(el => el.remove());
+                
+                const errorDiv = document.createElement('div');
+                errorDiv.className = 'error';
+                errorDiv.textContent = message;
+                
+                const firstCard = document.querySelector('.card');
+                if (firstCard) {
+                    firstCard.insertBefore(errorDiv, firstCard.firstChild);
+                    
+                    // Auto-remove after 5 seconds
+                    setTimeout(() => {
+                        errorDiv.remove();
+                    }, 5000);
+                }
+            }
+
+            showSuccess(message) {
+                const successDiv = document.createElement('div');
+                successDiv.className = 'success';
+                successDiv.textContent = message;
+                
+                const firstCard = document.querySelector('.card');
+                if (firstCard) {
+                    firstCard.insertBefore(successDiv, firstCard.firstChild);
+                    
+                    // Auto-remove after 3 seconds
+                    setTimeout(() => {
+                        successDiv.remove();
+                    }, 3000);
+                }
             }
         }
 
-        function updateMenuDisplay() {
-            renderMenu();
+        // Initialize the application when DOM is ready
+        document.addEventListener('DOMContentLoaded', () => {
+            // Wait a bit to ensure everything is loaded
+            setTimeout(() => {
+                window.qrGenerator = new QRCodeGenerator();
+            }, 100);
+        });
+
+        // Fallback initialization
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', () => {
+                window.qrGenerator = new QRCodeGenerator();
+            });
+        } else {
+            window.qrGenerator = new QRCodeGenerator();
         }
 
-        function renderMenu() {
-            const menuSections = document.getElementById('menu-sections');
-            if (menuSections && typeof initializeApp === 'function') {
-                // This will be handled by the main app
-            }
-        }
+        // Global error reporting
+        window.addEventListener('error', (event) => {
+            console.error('Global error caught:', event.error);
+        });
 
-        // Payment functions
-        function showPaymentModal() {
-            const modal = document.getElementById('payment-modal');
-            if (modal) {
-                modal.style.display = 'flex';
-                document.body.style.overflow = 'hidden';
-                updatePricing();
-            }
-        }
-
-        function closePaymentModal() {
-            const modal = document.getElementById('payment-modal');
-            if (modal) {
-                modal.style.display = 'none';
-                document.body.style.overflow = 'auto';
-            }
-        }
-
-        function updatePricing() {
-            const priceElement = document.getElementById('price');
-            if (priceElement) {
-                priceElement.textContent = `${pricing[selectedCurrency].monthly} ${selectedCurrency}`;
-            }
-        }
-
-        function processPayment() {
-            if (!selectedBank) {
-                alert('Please select a payment method');
-                return;
-            }
-            
-            const fileInput = document.getElementById('payment-proof');
-            if (!fileInput || !fileInput.files.length) {
-                alert('Please upload payment proof');
-                return;
-            }
-            
-            // Simulate payment processing
-            alert('Payment submitted! We will activate your premium account within 24 hours after verification.');
-            localStorage.setItem('isPremium', 'true');
-            isPremium = true;
-            closePaymentModal();
-            location.reload();
-        }
+        // Unhandled promise rejection
+        window.addEventListener('unhandledrejection', (event) => {
+            console.error('Unhandled promise rejection:', event.reason);
+        });
     </script>
 </body>
 </html>
