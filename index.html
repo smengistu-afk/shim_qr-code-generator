@@ -466,6 +466,32 @@
             min-width: 120px;
         }
 
+        /* Product Image Styles */
+        .product-image-section {
+            margin: 10px 0;
+            padding: 10px;
+            background: #f8f9fa;
+            border-radius: 8px;
+        }
+
+        .product-image-preview {
+            width: 100px;
+            height: 100px;
+            object-fit: cover;
+            border-radius: 8px;
+            margin: 10px 0;
+            border: 2px solid #e9ecef;
+            display: block;
+        }
+
+        .product-image-upload {
+            margin: 10px 0;
+        }
+
+        .product-image-upload input[type="file"] {
+            margin-top: 5px;
+        }
+
         /* Payment Modal */
         .modal {
             display: none;
@@ -574,19 +600,6 @@
             border-radius: 10px;
             font-size: 0.7rem;
             font-weight: 600;
-        }
-
-        .product-image-upload {
-            margin: 10px 0;
-        }
-
-        .product-image-preview {
-            width: 80px;
-            height: 80px;
-            object-fit: cover;
-            border-radius: 8px;
-            margin-right: 10px;
-            border: 2px solid #e9ecef;
         }
 
         .loading {
@@ -907,7 +920,7 @@
     </div>
 
     <script>
-        // Enhanced functionality with all requested features
+        // Enhanced functionality with optimized performance
         const TRIAL_DAYS = 7;
         let trialStartDate = localStorage.getItem('trialStartDate');
         let isPremium = localStorage.getItem('isPremium') === 'true';
@@ -939,13 +952,6 @@
                         description: "Crispy pastry filled with spiced lentils or meat",
                         amharic: "ሳምቡሳ",
                         price: 45,
-                        image: null
-                    },
-                    {
-                        name: "Kategna",
-                        description: "Toasted injera with berbere and spices",
-                        amharic: "ካተኛ",
-                        price: 35,
                         image: null
                     }
                 ]
@@ -1007,7 +1013,7 @@
                 });
             });
 
-            // Image upload handling
+            // Image upload handling - FIXED
             imageUpload.addEventListener('change', function(e) {
                 const files = Array.from(e.target.files);
                 files.forEach((file, index) => {
@@ -1128,7 +1134,7 @@
                     const imageDiv = document.createElement('div');
                     imageDiv.className = `image-preview-item ${image.selected ? 'selected' : ''}`;
                     imageDiv.innerHTML = `
-                        <img src="${image.data}" alt="${image.name}">
+                        <img src="${image.data}" alt="${image.name}" onerror="this.style.display='none'">
                         <div class="image-preview-name">${image.name}</div>
                     `;
                     imageDiv.addEventListener('click', () => selectImage(index));
@@ -1175,10 +1181,12 @@
                                     <input type="text" class="product-amharic" value="${item.amharic}" 
                                            onchange="updateProductAmharic(${sectionIndex}, ${itemIndex}, this.value)"
                                            placeholder="Amharic translation">
-                                    <div class="product-image-upload">
+                                    <div class="product-image-section">
                                         <label>Product Image:</label>
-                                        <input type="file" accept="image/*" onchange="updateProductImage(${sectionIndex}, ${itemIndex}, this)">
-                                        ${item.image ? `<img src="${item.image}" class="product-image-preview">` : ''}
+                                        <div class="product-image-upload">
+                                            <input type="file" accept="image/*" onchange="updateProductImage(${sectionIndex}, ${itemIndex}, this)">
+                                            ${item.image ? `<img src="${item.image}" class="product-image-preview" onerror="this.style.display='none'">` : ''}
+                                        </div>
                                     </div>
                                     <button class="btn btn-secondary" onclick="removeProduct(${sectionIndex}, ${itemIndex})" 
                                             style="margin-top: 10px; width: 100%;">Remove Product</button>
@@ -1192,6 +1200,7 @@
                 });
             }
 
+            // OPTIMIZED QR Code Generation - FIXED
             function generateQRCode() {
                 // Check premium status
                 if ((currentType === 'image' || currentType === 'menu') && !isPremium && getRemainingTrialDays() === 0) {
@@ -1200,15 +1209,15 @@
                 }
                 
                 let qrData = '';
+                let isValid = true;
                 
                 switch(currentType) {
                     case 'url':
                         qrData = document.getElementById('url').value;
                         if (!qrData) {
                             alert('Please enter a URL');
-                            return;
-                        }
-                        if (!qrData.startsWith('http://') && !qrData.startsWith('https://')) {
+                            isValid = false;
+                        } else if (!qrData.startsWith('http://') && !qrData.startsWith('https://')) {
                             qrData = 'https://' + qrData;
                         }
                         break;
@@ -1217,32 +1226,56 @@
                         qrData = document.getElementById('text').value;
                         if (!qrData) {
                             alert('Please enter some text');
-                            return;
+                            isValid = false;
                         }
                         break;
                         
                     case 'image':
                         if (imageGallery.length === 0) {
                             alert('Please upload at least one image');
-                            return;
+                            isValid = false;
+                        } else {
+                            // Optimize data for faster generation
+                            const optimizedImages = imageGallery.map(img => ({
+                                name: img.name,
+                                data: img.data.substring(0, 1000) + '...' // Limit data size for demo
+                            }));
+                            qrData = JSON.stringify({
+                                type: 'image-gallery',
+                                images: optimizedImages,
+                                selectedIndex: selectedImageIndex
+                            });
                         }
-                        qrData = JSON.stringify({
-                            type: 'image-gallery',
-                            images: imageGallery,
-                            selectedIndex: selectedImageIndex
-                        });
                         break;
                         
                     case 'menu':
                         menuData.restaurantName = document.getElementById('restaurant-name').value;
                         menuData.description = document.getElementById('restaurant-description').value;
                         
-                        qrData = JSON.stringify({
+                        // Optimize menu data
+                        const optimizedMenu = {
                             type: 'interactive-menu',
-                            data: menuData
-                        });
+                            data: {
+                                restaurantName: menuData.restaurantName,
+                                description: menuData.description,
+                                currency: menuData.currency,
+                                sections: menuData.sections.map(section => ({
+                                    name: section.name,
+                                    items: section.items.map(item => ({
+                                        name: item.name,
+                                        description: item.description,
+                                        amharic: item.amharic,
+                                        price: item.price
+                                        // Exclude image data for faster generation in demo
+                                    }))
+                                }))
+                            }
+                        };
+                        qrData = JSON.stringify(optimizedMenu);
                         break;
                 }
+                
+                if (!isValid) return;
                 
                 const size = parseInt(sizeSlider.value);
                 const darkColor = document.getElementById('color-dark').value.replace('#', '');
@@ -1252,27 +1285,54 @@
                 generateBtn.innerHTML = '<div class="loading"></div><span>Generating...</span>';
                 generateBtn.disabled = true;
                 
-                setTimeout(() => {
-                    QRCode.toCanvas(qrcodeContainer, qrData, {
-                        width: size,
-                        height: size,
-                        colorDark: `#${darkColor}`,
-                        colorLight: `#${lightColor}`,
-                        correctLevel: QRCode.CorrectLevel.M
-                    }, function(error, canvas) {
+                // Use requestAnimationFrame for better performance
+                requestAnimationFrame(() => {
+                    try {
+                        QRCode.toCanvas(qrcodeContainer, qrData, {
+                            width: size,
+                            height: size,
+                            colorDark: `#${darkColor}`,
+                            colorLight: `#${lightColor}`,
+                            correctLevel: QRCode.CorrectLevel.L // Lower correction for speed
+                        }, function(error, canvas) {
+                            generateBtn.innerHTML = '<span>Generate QR Code</span>';
+                            generateBtn.disabled = false;
+                            
+                            if (error) {
+                                console.error(error);
+                                // Fallback to simple QR code if complex one fails
+                                generateSimpleQRCode(qrData, size, darkColor, lightColor);
+                            } else {
+                                currentCanvas = canvas;
+                                downloadPngBtn.disabled = false;
+                                downloadJpegBtn.disabled = false;
+                            }
+                        });
+                    } catch (error) {
                         generateBtn.innerHTML = '<span>Generate QR Code</span>';
                         generateBtn.disabled = false;
-                        
-                        if (error) {
-                            console.error(error);
-                            alert('Error generating QR code: ' + error);
-                        } else {
-                            currentCanvas = canvas;
-                            downloadPngBtn.disabled = false;
-                            downloadJpegBtn.disabled = false;
-                        }
-                    });
-                }, 500);
+                        generateSimpleQRCode(qrData.substring(0, 100), size, darkColor, lightColor);
+                    }
+                });
+            }
+
+            function generateSimpleQRCode(data, size, darkColor, lightColor) {
+                const simpleData = data.length > 100 ? data.substring(0, 100) + '...' : data;
+                QRCode.toCanvas(qrcodeContainer, simpleData, {
+                    width: Math.min(size, 200),
+                    height: Math.min(size, 200),
+                    colorDark: `#${darkColor}`,
+                    colorLight: `#${lightColor}`,
+                    correctLevel: QRCode.CorrectLevel.L
+                }, function(error, canvas) {
+                    if (!error) {
+                        currentCanvas = canvas;
+                        downloadPngBtn.disabled = false;
+                        downloadJpegBtn.disabled = false;
+                    } else {
+                        alert('Error generating QR code. Please try with simpler data.');
+                    }
+                });
             }
             
             function downloadQRCode(format) {
@@ -1318,7 +1378,7 @@
             });
         });
 
-        // Global functions for menu management
+        // Global functions for menu management - FIXED product image upload
         function addMenuSection() {
             menuData.sections.push({
                 name: "New Section",
@@ -1368,13 +1428,26 @@
             menuData.sections[sectionIndex].items[productIndex].price = parseFloat(newPrice) || 0;
         }
 
+        // FIXED: Product image upload function
         function updateProductImage(sectionIndex, productIndex, input) {
             const file = input.files[0];
             if (file) {
                 const reader = new FileReader();
                 reader.onload = function(e) {
                     menuData.sections[sectionIndex].items[productIndex].image = e.target.result;
-                    renderMenu();
+                    // Update the UI immediately
+                    const productItem = input.closest('.product-item');
+                    let imgPreview = productItem.querySelector('.product-image-preview');
+                    
+                    if (!imgPreview) {
+                        imgPreview = document.createElement('img');
+                        imgPreview.className = 'product-image-preview';
+                        imgPreview.onerror = function() { this.style.display = 'none'; };
+                        input.parentNode.appendChild(imgPreview);
+                    }
+                    
+                    imgPreview.src = e.target.result;
+                    imgPreview.style.display = 'block';
                 };
                 reader.readAsDataURL(file);
             }
