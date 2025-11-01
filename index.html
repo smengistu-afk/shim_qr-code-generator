@@ -154,6 +154,7 @@
             font-size: clamp(0.8rem, 2vw, 0.9rem);
             min-height: 70px;
             justify-content: center;
+            -webkit-tap-highlight-color: transparent;
         }
 
         .qr-type-btn:hover {
@@ -242,6 +243,8 @@
             text-decoration: none;
             min-height: 50px;
             width: 100%;
+            -webkit-tap-highlight-color: transparent;
+            touch-action: manipulation;
         }
 
         .btn:hover {
@@ -442,6 +445,7 @@
             font-weight: 600;
             font-size: clamp(0.8rem, 2vw, 0.9rem);
             transition: all 0.3s;
+            -webkit-tap-highlight-color: transparent;
         }
 
         .currency-btn:hover {
@@ -468,6 +472,7 @@
             overflow: hidden;
             cursor: pointer;
             transition: all 0.3s;
+            -webkit-tap-highlight-color: transparent;
         }
 
         .image-preview-item:hover {
@@ -513,6 +518,7 @@
             transition: all 0.3s;
             margin-bottom: 10px;
             font-size: clamp(0.9rem, 2vw, 1rem);
+            -webkit-tap-highlight-color: transparent;
         }
 
         .file-input-button:hover {
@@ -603,6 +609,7 @@
             border-radius: 8px;
             cursor: pointer;
             transition: all 0.3s;
+            -webkit-tap-highlight-color: transparent;
         }
 
         .payment-option:hover {
@@ -634,6 +641,7 @@
             min-width: 70px;
             font-size: clamp(0.8rem, 2vw, 0.9rem);
             transition: all 0.3s;
+            -webkit-tap-highlight-color: transparent;
         }
 
         .currency-btn-modal:hover {
@@ -730,13 +738,6 @@
         .feature p {
             font-size: clamp(0.9rem, 2vw, 1rem);
         }
-
-        /* Utility Classes */
-        .text-center { text-align: center; }
-        .mb-10 { margin-bottom: 10px; }
-        .mb-20 { margin-bottom: 20px; }
-        .mt-10 { margin-top: 10px; }
-        .mt-20 { margin-top: 20px; }
 
         /* Touch improvements */
         @media (hover: none) {
@@ -1020,6 +1021,21 @@
     </div>
 
     <script>
+        // Wait for QRCode library to load
+        let QRCodeLoaded = false;
+
+        function checkQRCodeLoaded() {
+            if (typeof QRCode !== 'undefined') {
+                QRCodeLoaded = true;
+                initializeApp();
+            } else {
+                setTimeout(checkQRCodeLoaded, 100);
+            }
+        }
+
+        // Start checking for QRCode library
+        checkQRCodeLoaded();
+
         // Enhanced functionality with optimized performance and responsiveness
         const TRIAL_DAYS = 7;
         let trialStartDate = localStorage.getItem('trialStartDate');
@@ -1084,9 +1100,12 @@
             'EUR': { monthly: 5.5, yearly: 55 }
         };
 
-        document.addEventListener('DOMContentLoaded', function() {
-            initializeApp();
-            
+        function initializeApp() {
+            if (!QRCodeLoaded) {
+                console.error('QRCode library not loaded');
+                return;
+            }
+
             // DOM Elements
             const qrTypeButtons = document.querySelectorAll('.qr-type-btn');
             const inputSections = {
@@ -1109,28 +1128,37 @@
             let selectedCurrency = 'ETB';
             let selectedBank = null;
 
-            // Event Listeners with proper button types
+            // Initialize application state
+            checkTrialStatus();
+            initializeMenu();
+            initializeFileInputs();
+
+            // Event Listeners with proper button types and touch support
             qrTypeButtons.forEach(button => {
-                button.addEventListener('click', function() {
-                    const type = this.getAttribute('data-type');
-                    
-                    // Check premium status
-                    if ((type === 'image' || type === 'menu') && !isPremium && getRemainingTrialDays() === 0) {
-                        showPaymentModal();
-                        return;
-                    }
-                    
-                    qrTypeButtons.forEach(btn => btn.classList.remove('active'));
-                    this.classList.add('active');
-                    
-                    Object.values(inputSections).forEach(section => {
-                        section.classList.add('hidden');
-                    });
-                    
-                    currentType = type;
-                    inputSections[currentType].classList.remove('hidden');
-                });
+                button.addEventListener('click', handleQRTypeClick);
+                button.addEventListener('touchstart', handleQRTypeClick, { passive: true });
             });
+
+            function handleQRTypeClick(e) {
+                e.preventDefault();
+                const type = this.getAttribute('data-type');
+                
+                // Check premium status
+                if ((type === 'image' || type === 'menu') && !isPremium && getRemainingTrialDays() === 0) {
+                    showPaymentModal();
+                    return;
+                }
+                
+                qrTypeButtons.forEach(btn => btn.classList.remove('active'));
+                this.classList.add('active');
+                
+                Object.values(inputSections).forEach(section => {
+                    section.classList.add('hidden');
+                });
+                
+                currentType = type;
+                inputSections[currentType].classList.remove('hidden');
+            }
 
             // Image upload handling
             imageUpload.addEventListener('change', function(e) {
@@ -1214,13 +1242,6 @@
                 }
             });
 
-            function initializeApp() {
-                checkTrialStatus();
-                initializeMenu();
-                // Initialize file input buttons
-                initializeFileInputs();
-            }
-
             function initializeFileInputs() {
                 // Make file input buttons clickable
                 document.querySelectorAll('.file-input-button').forEach(button => {
@@ -1235,17 +1256,26 @@
 
             function checkTrialStatus() {
                 const remainingDays = getRemainingTrialDays();
-                document.getElementById('trial-days').textContent = `${remainingDays} days`;
+                const trialDaysElement = document.getElementById('trial-days');
+                if (trialDaysElement) {
+                    trialDaysElement.textContent = `${remainingDays} days`;
+                }
                 
                 if (remainingDays === 0 && !isPremium) {
-                    document.querySelector('.trial-banner').innerHTML = 
-                        '🚫 Trial expired. <button class="btn-warning" onclick="showPaymentModal()" style="width: auto; padding: 8px 15px;">Upgrade to Premium</button>';
+                    const trialBanner = document.querySelector('.trial-banner');
+                    if (trialBanner) {
+                        trialBanner.innerHTML = 
+                            '🚫 Trial expired. <button class="btn-warning" onclick="showPaymentModal()" style="width: auto; padding: 8px 15px;">Upgrade to Premium</button>';
+                    }
                     disablePremiumFeatures();
                 }
                 
                 if (isPremium) {
-                    document.querySelector('.trial-banner').innerHTML = 
-                        '⭐ PREMIUM MEMBER - Full access to all features';
+                    const trialBanner = document.querySelector('.trial-banner');
+                    if (trialBanner) {
+                        trialBanner.innerHTML = 
+                            '⭐ PREMIUM MEMBER - Full access to all features';
+                    }
                     enablePremiumFeatures();
                 }
             }
@@ -1262,10 +1292,12 @@
                 document.querySelectorAll('.premium-feature').forEach(feature => {
                     feature.style.opacity = '0.6';
                     const button = feature.querySelector('.qr-type-btn');
-                    button.onclick = (e) => {
-                        e.preventDefault();
-                        showPaymentModal();
-                    };
+                    if (button) {
+                        button.onclick = (e) => {
+                            e.preventDefault();
+                            showPaymentModal();
+                        };
+                    }
                 });
             }
 
@@ -1273,7 +1305,9 @@
                 document.querySelectorAll('.premium-feature').forEach(feature => {
                     feature.style.opacity = '1';
                     const button = feature.querySelector('.qr-type-btn');
-                    button.onclick = null;
+                    if (button) {
+                        button.onclick = null;
+                    }
                 });
             }
 
@@ -1283,6 +1317,8 @@
             }
 
             function renderImageGallery() {
+                if (!imagePreviewContainer) return;
+                
                 imagePreviewContainer.innerHTML = '';
                 
                 if (imageGallery.length === 0) {
@@ -1298,6 +1334,7 @@
                         <div class="image-preview-name">${image.name}</div>
                     `;
                     imageDiv.addEventListener('click', () => selectImage(index));
+                    imageDiv.addEventListener('touchstart', () => selectImage(index), { passive: true });
                     imagePreviewContainer.appendChild(imageDiv);
                 });
             }
@@ -1312,6 +1349,8 @@
 
             function renderMenu() {
                 const menuSections = document.getElementById('menu-sections');
+                if (!menuSections) return;
+                
                 menuSections.innerHTML = '';
                 
                 if (menuData.sections.length === 0) {
@@ -1367,6 +1406,11 @@
 
             // OPTIMIZED QR Code Generation
             function generateQRCode() {
+                if (!QRCodeLoaded) {
+                    alert('QR Code library is still loading. Please try again in a moment.');
+                    return;
+                }
+
                 // Check premium status
                 if ((currentType === 'image' || currentType === 'menu') && !isPremium && getRemainingTrialDays() === 0) {
                     showPaymentModal();
@@ -1478,9 +1522,6 @@
                                 currentCanvas = canvas;
                                 downloadPngBtn.disabled = false;
                                 downloadJpegBtn.disabled = false;
-                                
-                                // Add success animation
-                                canvas.style.animation = 'fadeIn 0.5s ease-in';
                             }
                         });
                     } catch (error) {
@@ -1534,7 +1575,7 @@
                     inputSections[key].classList.add('hidden');
                 }
             });
-        });
+        }
 
         // Global functions for menu management
         function addMenuSection() {
@@ -1627,31 +1668,28 @@
         }
 
         function renderMenu() {
-            // This would be implemented to update the menu UI
             const menuSections = document.getElementById('menu-sections');
-            if (menuSections) {
-                // Re-render logic would go here
-            }
-        }
-
-        function renderImageGallery() {
-            // This would be implemented to update the image gallery UI
-            const container = document.getElementById('image-preview-container');
-            if (container) {
-                // Re-render logic would go here
+            if (menuSections && typeof initializeApp === 'function') {
+                // This will be handled by the main app
             }
         }
 
         // Payment functions
         function showPaymentModal() {
-            document.getElementById('payment-modal').style.display = 'flex';
-            document.body.style.overflow = 'hidden';
-            updatePricing();
+            const modal = document.getElementById('payment-modal');
+            if (modal) {
+                modal.style.display = 'flex';
+                document.body.style.overflow = 'hidden';
+                updatePricing();
+            }
         }
 
         function closePaymentModal() {
-            document.getElementById('payment-modal').style.display = 'none';
-            document.body.style.overflow = 'auto';
+            const modal = document.getElementById('payment-modal');
+            if (modal) {
+                modal.style.display = 'none';
+                document.body.style.overflow = 'auto';
+            }
         }
 
         function updatePricing() {
@@ -1668,7 +1706,7 @@
             }
             
             const fileInput = document.getElementById('payment-proof');
-            if (!fileInput.files.length) {
+            if (!fileInput || !fileInput.files.length) {
                 alert('Please upload payment proof');
                 return;
             }
@@ -1678,27 +1716,8 @@
             localStorage.setItem('isPremium', 'true');
             isPremium = true;
             closePaymentModal();
-            checkTrialStatus();
             location.reload();
         }
-
-        function checkTrialStatus() {
-            // This would check and update the trial status display
-            const trialDaysElement = document.getElementById('trial-days');
-            if (trialDaysElement) {
-                // Update logic would go here
-            }
-        }
-
-        // Add CSS for fadeIn animation
-        const style = document.createElement('style');
-        style.textContent = `
-            @keyframes fadeIn {
-                from { opacity: 0; transform: scale(0.9); }
-                to { opacity: 1; transform: scale(1); }
-            }
-        `;
-        document.head.appendChild(style);
     </script>
 </body>
 </html>
